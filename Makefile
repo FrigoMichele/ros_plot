@@ -14,18 +14,21 @@
 #CXX = g++
 #CXX = clang++
 
-EXE = example_glfw_opengl3
-IMGUI_DIR = ../..
-SOURCES = main.cpp
+EXE = $(BUILD_DIR)/example_glfw_opengl3
+IMGUI_DIR = ./libs/imgui
+SOURCES = $(SRC_DIR)/main.cpp
 SOURCES += $(IMGUI_DIR)/imgui.cpp $(IMGUI_DIR)/imgui_demo.cpp $(IMGUI_DIR)/imgui_draw.cpp $(IMGUI_DIR)/imgui_tables.cpp $(IMGUI_DIR)/imgui_widgets.cpp
 SOURCES += $(IMGUI_DIR)/backends/imgui_impl_glfw.cpp $(IMGUI_DIR)/backends/imgui_impl_opengl3.cpp
-OBJS = $(addsuffix .o, $(basename $(notdir $(SOURCES))))
+OBJS = $(addprefix $(BUILD_DIR)/, $(addsuffix .o, $(basename $(notdir $(SOURCES)))))
 UNAME_S := $(shell uname -s)
 LINUX_GL_LIBS = -lGL
 
 CXXFLAGS = -std=c++11 -I$(IMGUI_DIR) -I$(IMGUI_DIR)/backends
 CXXFLAGS += -g -Wall -Wformat
 LIBS =
+# Build folder
+BUILD_DIR := ./build
+SRC_DIR := ./src
 
 ##---------------------------------------------------------------------
 ## OPENGL ES
@@ -70,13 +73,13 @@ endif
 ## BUILD RULES
 ##---------------------------------------------------------------------
 
-%.o:%.cpp
+$(BUILD_DIR)/%.o:$(SRC_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-%.o:$(IMGUI_DIR)/%.cpp
+$(BUILD_DIR)/%.o:$(IMGUI_DIR)/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
-%.o:$(IMGUI_DIR)/backends/%.cpp
+$(BUILD_DIR)/%.o:$(IMGUI_DIR)/backends/%.cpp
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 
 all: $(EXE)
