@@ -1,0 +1,6 @@
+[submodule "libs/imgui"]
+	path = libs/imgui
+	url = https://github.com/ocornut/imgui
+[submodule "libs/emscripten"]
+	path = libs/emscripten
+	url = https://github.com/emscripten-core/emsdk.git
