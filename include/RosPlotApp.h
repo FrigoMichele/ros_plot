@@ -1,13 +1,13 @@
-#include "Application.h"
+#include "Renderer.h"
 
 #include "Plot.h"
 #include "Window.h"
 
-class RosPlotApp : public Application
+class RosPlotApp : public Renderer
 {
 private:
   //Imgui item 
-  std::list<std::unique_ptr<Plot>> m_plots;
+  std::list<Plot*> m_plots;
 
 public:
   RosPlotApp(/* args */);
@@ -26,19 +26,18 @@ RosPlotApp::~RosPlotApp()
 
 bool RosPlotApp::initialize()
 {
-  if(!Application::initialize())
+  if(!Renderer::initialize())
   {
     return false;
   }
 
-
-  m_plots.push_back(std::unique_ptr<Plot>());
-  m_plots.push_back(std::unique_ptr<Plot>());
-  m_plots.push_back(std::unique_ptr<Plot>());
+  m_plots.push_back(new Plot("1"));
+  m_plots.push_back(new Plot("2"));
+  m_plots.push_back(new Plot("3"));
 
   for (auto it = m_plots.begin(); it != m_plots.end(); ++it)
   {
-    Application::addComponent(std::move(*it));
+    Renderer::addComponent((*it));
   }
 
   return true;

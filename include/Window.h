@@ -9,7 +9,7 @@
 
 class Window : public IRenderable
 {
-private:
+protected:
   std::string m_name;
 public:
   Window();
@@ -21,7 +21,7 @@ public:
   bool closeContex() override;
 };
 
-Window::Window() : Window("")
+Window::Window() : Window("windows")
 {
 
 }
