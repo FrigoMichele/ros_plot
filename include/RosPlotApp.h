@@ -1,7 +1,7 @@
 #include "Renderer.h"
 
 #include "Plot.h"
-#include "Window.h"
+#include "Widget.h"
 
 class RosPlotApp : public Renderer
 {
@@ -22,6 +22,9 @@ RosPlotApp::RosPlotApp(/* args */)
 
 RosPlotApp::~RosPlotApp()
 {
+  for (auto it = m_plots.begin(); it != m_plots.end(); ++it)
+    delete *it;
+
 }
 
 bool RosPlotApp::initialize()

@@ -1,5 +1,5 @@
-#ifndef WINDOWS_H
-#define WINDOWS_H
+#ifndef WIDGET_H
+#define WIDGET_H
 #include <string>
 #include <list>
 #include <memory>
@@ -7,44 +7,44 @@
 #include "imgui.h"
 #include "IRenderable.h"
 
-class Window : public IRenderable
+class Widget : public IRenderable
 {
 protected:
   std::string m_name;
 public:
-  Window();
-  Window(std::string name);
-  ~Window();
+  Widget();
+  Widget(std::string name);
+  ~Widget();
 
   bool openContext() override;
   bool render() override;
   bool closeContex() override;
 };
 
-Window::Window() : Window("windows")
+Widget::Widget() : Widget("windows")
 {
 
 }
 
-Window::Window(std::string name) : m_name(name)
+Widget::Widget(std::string name) : m_name(name)
 {
 }
 
-Window::~Window()
+Widget::~Widget()
 {
 }
 
-bool Window::openContext()
+bool Widget::openContext()
 {
   ImGui::Begin(m_name.c_str());
 }
 
-bool Window::render()
+bool Widget::render()
 {
 
 }
 
-bool Window::closeContex()
+bool Widget::closeContex()
 {
   ImGui::End();
 }
