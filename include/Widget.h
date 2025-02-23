@@ -16,6 +16,7 @@ public:
   Widget(std::string name);
   ~Widget();
 
+  bool initialize();
   bool openContext() override;
   bool render() override;
   bool closeContex() override;
@@ -32,6 +33,11 @@ Widget::Widget(std::string name) : m_name(name)
 
 Widget::~Widget()
 {
+}
+
+bool Widget::initialize()
+{
+  return true;
 }
 
 bool Widget::openContext()

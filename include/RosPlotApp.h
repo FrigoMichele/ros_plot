@@ -14,6 +14,7 @@ public:
   ~RosPlotApp();
 
   bool initialize();
+  bool update();
 };
 
 RosPlotApp::RosPlotApp(/* args */)
@@ -44,4 +45,13 @@ bool RosPlotApp::initialize()
   }
 
   return true;
+}
+
+
+bool RosPlotApp::update()
+{
+  m_plots.front()->updateData(rand());
+
+
+  return Renderer::update();
 }

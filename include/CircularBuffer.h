@@ -11,6 +11,7 @@
 // Includes
 //-------------------------------------------------------------------
 #include <memory>
+#include <stdexcept>
 
 //-------------------------------------------------------------------
 // Circular_Buffer (Class)
@@ -90,6 +91,8 @@ public:
       return tail - head;
     return max_size - head - tail;
   }
+
+  T* get_pointer() {return (T*)buffer.get();}
 };
 /*
 //---------------------------------------------------------------

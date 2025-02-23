@@ -3,53 +3,73 @@
 
 #include <list>
 #include <ctime>
+#include <functional>
+#include <chrono>
 
 #include "implot.h" 
 #include "CircularBuffer.h"
 #include "Widget.h"
 
 template<class T>
-class TimeStampedArray
+class TimestampedBuffer
 {
 private:
-  Circular_Buffer<time_t> m_time;
+  Circular_Buffer<T> m_time;
   Circular_Buffer<T> m_data;
+  const size_t m_max_size = 1000;
 public:
-  TimeStampedArray(/* args */);
-  ~TimeStampedArray();
-  ImPlotPoint getDataPoint(int idx, void* data);
+
+  TimestampedBuffer() : m_time(m_max_size), m_data(m_max_size){};
+  ~TimestampedBuffer(){};
+
+  inline T* getDataPtr() {return m_data.get_pointer();}
+  inline T* getTimePtr() {return m_time.get_pointer();}
+
 
   time_t getTime(int idx);
   T getValue(int idx);
-};
-template<class T>
-TimeStampedArray::TimeStampedArray(/* args */)
-{
-}
-template<class T>
-TimeStampedArray::~TimeStampedArray()
-{
-}
-template<class T>
-ImPlotPoint 
-TimeStampedArray::getDataPoint(int idx, void* data)
-{
-  TimeStampedArray* my_data = (TimeStampedArray*)data;
-  ImPlotPoint p;
-  p.x = my_data->getTime(idx);
-  p.y = my_data->getValue(idx);
-  return p
+  inline size_t size() {return m_data.size();} 
 
-}
+  void setPoint(T data, time_t time)
+  {
+    if(m_time.is_full())
+      m_time.dequeue();
+
+    if(m_data.is_full())
+      m_data.dequeue();
+
+    m_time.enqueue(time);
+    m_data.enqueue(data);
+  }
+
+  void initialize()
+  {
+    while (!m_time.is_empty())
+      m_time.dequeue();
+
+    while (!m_data.is_empty())
+      m_data.dequeue();
+      
+    for (size_t i = 0; i < m_max_size; i++)
+      m_time.enqueue(0);
+  
+    for (size_t i = 0; i <m_max_size; i++)
+      m_data.enqueue(0);
+  }
+ 
+};
 
 class Plot : public Widget
 {
 private:
-  TimeStampedArray<double> m_data;
+  TimestampedBuffer<double> m_data;
 
 public:
   Plot(std::string name);
   ~Plot();
+
+  bool initialize();
+  void updateData(double data);
 
   bool openContext() override;
   bool render() override;
@@ -64,6 +84,17 @@ Plot::~Plot()
 {
 }
 
+bool Plot::initialize()
+{
+
+  if(!Widget::initialize())
+    return false;
+
+  m_data.initialize();
+
+  return true;
+}
+
 bool Plot::openContext()
 {
   if(!Widget::openContext())
@@ -74,7 +105,7 @@ bool Plot::openContext()
 
 bool Plot::render()
 {
-  ImPlot::PlotLineG("line", m_data., nullptr, 1000);
+  ImPlot::PlotLine("line", m_data.getDataPtr(), m_data.getTimePtr(), m_data.size());
 }
 
 bool Plot::closeContex()
@@ -82,7 +113,14 @@ bool Plot::closeContex()
   ImPlot::EndPlot();
 
   return Widget::closeContex();
+}
 
+void Plot::updateData(double data)
+{
+  const auto now = std::chrono::system_clock::now();
+  const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
+
+  m_data.setPoint(data, t_c);
 }
 
 #endif
