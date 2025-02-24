@@ -12,6 +12,9 @@
 #include "imgui_impl_opengl3.h"
 #include <stdio.h>
 #include <memory>
+#include <chrono>
+#include <iostream>
+#include <thread>
 
 #define GL_SILENCE_DEPRECATION
 #if defined(IMGUI_IMPL_OPENGL_ES2)
@@ -170,6 +173,8 @@ int main(int, char**)
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
+
+        std::this_thread::sleep_for(std::chrono::microseconds(200));
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;

@@ -35,10 +35,15 @@ bool RosPlotApp::initialize()
     return false;
   }
 
-  m_plots.push_back(new Plot("1"));
-  m_plots.push_back(new Plot("2"));
-  m_plots.push_back(new Plot("3"));
+  size_t n_plots = 4;
 
+  for (size_t i = 0; i < n_plots; i++)
+  {
+    Plot* plot = new Plot(std::to_string(i).c_str());
+    plot->initialize();
+    m_plots.push_back(plot);
+  }
+  
   for (auto it = m_plots.begin(); it != m_plots.end(); ++it)
   {
     Renderer::addComponent((*it));

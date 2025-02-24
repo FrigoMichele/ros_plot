@@ -7,62 +7,56 @@
 #include <chrono>
 
 #include "implot.h" 
-#include "CircularBuffer.h"
 #include "Widget.h"
 
-template<class T>
-class TimestampedBuffer
-{
-private:
-  Circular_Buffer<T> m_time;
-  Circular_Buffer<T> m_data;
-  const size_t m_max_size = 1000;
-public:
-
-  TimestampedBuffer() : m_time(m_max_size), m_data(m_max_size){};
-  ~TimestampedBuffer(){};
-
-  inline T* getDataPtr() {return m_data.get_pointer();}
-  inline T* getTimePtr() {return m_time.get_pointer();}
-
-
-  time_t getTime(int idx);
-  T getValue(int idx);
-  inline size_t size() {return m_data.size();} 
-
-  void setPoint(T data, time_t time)
-  {
-    if(m_time.is_full())
-      m_time.dequeue();
-
-    if(m_data.is_full())
-      m_data.dequeue();
-
-    m_time.enqueue(time);
-    m_data.enqueue(data);
+// utility structure for realtime plot
+struct TimestampedBuffer {
+  int MaxSize;
+  int Offset;
+  ImVector<ImVec2> Data;
+  TimestampedBuffer(int max_size = 2000) {
+      MaxSize = max_size;
+      Offset  = 0;
+      Data.reserve(MaxSize);
+  }
+  void AddPoint(float x, float y) {
+      if (Data.size() < MaxSize)
+          Data.push_back(ImVec2(x,y));
+      else {
+          Data[Offset] = ImVec2(x,y);
+          Offset =  (Offset + 1) % MaxSize;
+      }
+  }
+  void Erase() {
+      if (Data.size() > 0) {
+          Data.shrink(0);
+          Offset  = 0;
+      }
   }
 
-  void initialize()
+  ImVec2 getFront()
   {
-    while (!m_time.is_empty())
-      m_time.dequeue();
-
-    while (!m_data.is_empty())
-      m_data.dequeue();
-      
-    for (size_t i = 0; i < m_max_size; i++)
-      m_time.enqueue(0);
-  
-    for (size_t i = 0; i <m_max_size; i++)
-      m_data.enqueue(0);
+    if (Data.size() < MaxSize)
+      return Data.front();
+    else
+      return Data[Offset];
   }
- 
+
+  ImVec2 getBack()
+  {
+    if (Data.size() < MaxSize)
+    return Data.back();
+  else
+    return Data[((Offset + 1) % MaxSize)];
+  }
+
 };
 
 class Plot : public Widget
 {
 private:
-  TimestampedBuffer<double> m_data;
+  TimestampedBuffer m_data;
+  float m_time;
 
 public:
   Plot(std::string name);
@@ -78,6 +72,7 @@ public:
 
 Plot::Plot(std::string name = "plot") : Widget(name)
 {
+  
 }
 
 Plot::~Plot()
@@ -90,7 +85,7 @@ bool Plot::initialize()
   if(!Widget::initialize())
     return false;
 
-  m_data.initialize();
+  m_time = 0;
 
   return true;
 }
@@ -105,7 +100,11 @@ bool Plot::openContext()
 
 bool Plot::render()
 {
-  ImPlot::PlotLine("line", m_data.getDataPtr(), m_data.getTimePtr(), m_data.size());
+  if(!m_data.Data.empty())
+  {
+    ImPlot::SetupAxesLimits(m_data.getBack().x, m_data.getFront().x, m_data.getBack().y, m_data.getFront().y,ImPlotCond_Always);
+    ImPlot::PlotLine("line", &m_data.Data[0].x, &m_data.Data[0].y, m_data.Data.size(), 0, m_data.Offset, 2*sizeof(float));
+  }
 }
 
 bool Plot::closeContex()
@@ -117,10 +116,8 @@ bool Plot::closeContex()
 
 void Plot::updateData(double data)
 {
-  const auto now = std::chrono::system_clock::now();
-  const std::time_t t_c = std::chrono::system_clock::to_time_t(now);
-
-  m_data.setPoint(data, t_c);
+  m_time += ImGui::GetIO().DeltaTime;
+  m_data.AddPoint(rand(), m_time);
 }
 
 #endif
