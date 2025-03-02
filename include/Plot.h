@@ -5,6 +5,7 @@
 #include <ctime>
 #include <functional>
 #include <chrono>
+#include <math.h>
 
 #include "implot.h" 
 #include "Widget.h"
@@ -102,7 +103,7 @@ bool Plot::render()
 {
   if(!m_data.Data.empty())
   {
-    ImPlot::SetupAxesLimits(m_data.getBack().x, m_data.getFront().x, m_data.getBack().y, m_data.getFront().y,ImPlotCond_Always);
+    //ImPlot::SetupAxesLimits(m_data.getBack().x, m_data.getFront().x, m_data.getBack().y, m_data.getFront().y,ImPlotCond_Always);
     ImPlot::PlotLine("line", &m_data.Data[0].x, &m_data.Data[0].y, m_data.Data.size(), 0, m_data.Offset, 2*sizeof(float));
   }
 }
@@ -117,7 +118,7 @@ bool Plot::closeContex()
 void Plot::updateData(double data)
 {
   m_time += ImGui::GetIO().DeltaTime;
-  m_data.AddPoint(rand(), m_time);
+  m_data.AddPoint(sin(m_time), m_time);
 }
 
 #endif

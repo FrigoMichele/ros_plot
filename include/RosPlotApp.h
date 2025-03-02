@@ -2,12 +2,14 @@
 
 #include "Plot.h"
 #include "Widget.h"
+#include "ItemList.h"
 
 class RosPlotApp : public Renderer
 {
 private:
   //Imgui item 
   std::list<Plot*> m_plots;
+  ItemList* m_list;
 
 public:
   RosPlotApp(/* args */);
@@ -47,7 +49,11 @@ bool RosPlotApp::initialize()
   for (auto it = m_plots.begin(); it != m_plots.end(); ++it)
   {
     Renderer::addComponent((*it));
-  }
+  } 
+
+  m_list = new ItemList();
+  m_list->initialize();
+  Renderer::addComponent(m_list);
 
   return true;
 }
@@ -55,7 +61,7 @@ bool RosPlotApp::initialize()
 
 bool RosPlotApp::update()
 {
-  m_plots.front()->updateData(rand());
+  m_plots.front()->updateData(1);
 
 
   return Renderer::update();
