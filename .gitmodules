@@ -1,12 +1,9 @@
 [submodule "libs/imgui"]
 	path = libs/imgui
 	url = https://github.com/ocornut/imgui
-[submodule "libs/emscripten"]
-	path = libs/emscripten
-	url = https://github.com/emscripten-core/emsdk.git
 [submodule "libs/implot"]
 	path = libs/implot
 	url = https://github.com/epezent/implot
 [submodule "libs/glfw"]
-	path = glfw
+	path = libs/glfw
 	url = https://github.com/glfw/glfw

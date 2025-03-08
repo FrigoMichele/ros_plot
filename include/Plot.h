@@ -60,7 +60,7 @@ private:
   float m_time;
 
 public:
-  Plot(std::string name);
+  Plot(std::string name = "plot");
   ~Plot();
 
   bool initialize();
@@ -71,7 +71,7 @@ public:
   bool closeContex() override;
 };
 
-Plot::Plot(std::string name = "plot") : Widget(name)
+Plot::Plot(std::string name) : Widget(name)
 {
   
 }
