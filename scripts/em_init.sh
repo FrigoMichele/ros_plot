@@ -1,0 +1,1 @@
+source ../libs/emsdk/emsdk_env.sh

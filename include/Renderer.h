@@ -32,18 +32,18 @@ bool Renderer::initialize(){ return true; }
 bool Renderer::addComponent(IRenderable* item)
 {
   m_items.push_back(item);
+  return true;
 }
 
 bool Renderer::update()
 {
-  for (auto it = m_items.begin(); it != m_items.end(); ++it)
+  for (auto& item : m_items)
   {
-    (*it)->openContext();
-
-    (*it)->render();
-
-    (*it)->closeContex();
+    item->openContext();
+    item->render();
+    item->closeContex();
   }
+  return true;
 }
 
 #endif

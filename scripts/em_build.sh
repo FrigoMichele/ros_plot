@@ -7,4 +7,5 @@ export EMBUILD=../build_em
 source ${EMSDKROOT}/emsdk_env.sh
 mkdir -p ${EMBUILD} && cd ${EMBUILD}
 cmake .. -DCMAKE_TOOLCHAIN_FILE=${EMROOT}/cmake/Modules/Platform/Emscripten.cmake
-cmake --build . -j4
+cmake --build . -j4 
+cd ../scripts

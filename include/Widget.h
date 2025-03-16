@@ -43,16 +43,19 @@ bool Widget::initialize()
 bool Widget::openContext()
 {
   ImGui::Begin(m_name.c_str());
+  
+  return true;
 }
 
 bool Widget::render()
 {
-
+  return true;
 }
 
 bool Widget::closeContex()
 {
   ImGui::End();
+  return true;
 }
 
 #endif

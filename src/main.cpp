@@ -133,6 +133,7 @@ int main(int, char**)
     ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
     m_app.initialize();
+    
     // Main loop
 #ifdef __EMSCRIPTEN__
     // For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
@@ -174,7 +175,6 @@ int main(int, char**)
 
         glfwSwapBuffers(window);
 
-        std::this_thread::sleep_for(std::chrono::microseconds(200));
     }
 #ifdef __EMSCRIPTEN__
     EMSCRIPTEN_MAINLOOP_END;
