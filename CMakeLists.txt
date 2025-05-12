@@ -45,7 +45,9 @@ target_include_directories( implot PUBLIC
         ${PROJECT_SOURCE_DIR}/libs/imgui
 )
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+
+## Add executable example
+add_executable(${PROJECT_NAME} src/example/main.cpp)
 
 
 if( IMGUI_COMPILE_GLFW )
