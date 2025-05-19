@@ -14,7 +14,7 @@
 
 namespace ui::imgui
 {
-  class Plot : public ui::Widget
+  class Plot : public ui::Plot , public ui::imgui::Plot
   {
     private:
       TimestampedBuffer m_data;

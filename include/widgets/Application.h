@@ -15,6 +15,7 @@ namespace ui
     };
   }
 }
+
 bool Application::initialize()
 {
   ui::Node::initialize("Application",this);
